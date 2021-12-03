@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
+</head>
+<body>
+    <div id="emoji">
+        <%= text %>
+    </div>
+    <script>
+        const emoji = document.getElementById("emoji");
+        const emojis = ["😡", "😟", "😐", "😉", "😁"]
+        
+        function getImoji(score) {
+
+            if (score > 0.8) {
+                return emojis[4];
+            } else if (score > 0.6){
+                return emojis[3];
+            } else if (score > 0.4){
+                return emojis[2];
+            } else if (score > 0.2){
+                return emojis[1];
+            }
+
+            return emojis[0];
+        }
+
+        function main() {
+            if (! emoji.innerText) {
+                console.log("please insert messages!");
+                return emoji.innerText = "please insert messages!";
+            }
+            // Create a new Sentiment method
+            const sentiment = ml5.sentiment('movieReviews', modelReady);
+
+            // When the model is loaded
+            function modelReady() {
+                // model is ready
+                console.log('Model Loaded!');
+
+                const { score } = sentiment.predict(emoji.innerText);
+
+                const data = getImoji(score);
+                
+                console.log(data)
+
+                // const emoji = document.getElementById("emoji")
+                emoji.innerText = data;
+            }
+        }
+
+        main()
+        
+    </script>
+</body>
+</html>
